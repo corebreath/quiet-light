@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "The Quiet Light",
+    "slug": "quiet-light",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "quietlight",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.teosharmony.quietlight"
+    },
+    "android": {
+      "package": "com.teosharmony.quietlight",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#0D0B1F",
+        "foregroundImage": "./assets/android-icon-foreground.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0D0B1F",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 150
+        }
+      ],
+      "expo-audio",
+      "expo-sqlite"
+    ]
+  }
+}
