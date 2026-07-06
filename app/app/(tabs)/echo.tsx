@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   View, Text, StyleSheet, ScrollView,
-  TouchableOpacity, Modal,
+  TouchableOpacity, Modal, Share,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStore } from '../../src/store/useStore';
@@ -46,6 +46,16 @@ export default function EchoScreen() {
     setSelectedAnswer('');
   };
 
+  const handleExport = async () => {
+    const lines = state.echoEntries.map(
+      (e) => `${e.date} — ${e.label} (${ANSWER_OPTIONS.find((o) => o.value === e.answer)?.label ?? e.answer})`
+    );
+    const message = `Echo Journal — ${state.echoEntries.length} entries\n\n${lines.join('\n')}\n\n---\nJSON backup:\n${JSON.stringify(state.echoEntries, null, 2)}`;
+    try {
+      await Share.share({ message, title: 'Echo Journal backup' });
+    } catch {}
+  };
+
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
@@ -54,9 +64,16 @@ export default function EchoScreen() {
             <Text style={styles.heading}>Echo Journal</Text>
             <Text style={styles.subheading}>Is this feeling mine?</Text>
           </View>
-          <TouchableOpacity style={styles.addBtn} onPress={() => setShowAdd(true)} activeOpacity={0.8}>
-            <Text style={styles.addBtnText}>+ Add</Text>
-          </TouchableOpacity>
+          <View style={styles.headerActions}>
+            {state.echoEntries.length > 0 && (
+              <TouchableOpacity style={styles.exportBtn} onPress={handleExport} activeOpacity={0.8}>
+                <Text style={styles.exportBtnText}>Save a copy</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity style={styles.addBtn} onPress={() => setShowAdd(true)} activeOpacity={0.8}>
+              <Text style={styles.addBtnText}>+ Add</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {state.echoEntries.length === 0 ? (
@@ -171,6 +188,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.textSecondary,
     marginTop: 4,
+  },
+  headerActions: { flexDirection: 'row', alignItems: 'center', gap: Spacing.sm },
+  exportBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: Radius.pill,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  exportBtnText: {
+    fontFamily: Fonts.regular,
+    fontSize: 13,
+    color: Colors.textSecondary,
   },
   addBtn: {
     backgroundColor: Colors.quietLight,
